@@ -161,7 +161,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(_isEditing ? 'تم تحديث الطلب' : 'تم إضافة الطلب'),
+        content: Text(_isEditing ? 'Order updated' : 'Order added'),
         duration: const Duration(seconds: 2),
       ),
     );

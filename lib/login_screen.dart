@@ -233,8 +233,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   height: 54,
                   child: ElevatedButton(
-                    onPressed:
-                        _submitForm, 
+                    onPressed:(){
+                       _submitForm();
+                       Navigator.pushReplacement(
+                         context,
+                         MaterialPageRoute(builder: (_) => const HomeScreen()),
+                       );
+                    }
+                       , 
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF008A33),
                       shape: RoundedRectangleBorder(

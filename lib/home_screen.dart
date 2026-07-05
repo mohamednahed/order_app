@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: IndexedStack(
         index: _selectedIndex,
         children: _screens,
@@ -207,7 +206,11 @@ class HomeDashboard extends StatelessWidget {
             ],
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const OrdersScreen()),
+              );
+            },
             style: TextButton.styleFrom(foregroundColor: Colors.blue),
             child: const Text(
               'View all',
