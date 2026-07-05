@@ -75,30 +75,11 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.all(16),
-                    itemCount: filtered.length,
+                    itemCount: filtered.length?? 0,
                     itemBuilder: (context, index) => OrderCard(order: filtered[index]),
                   ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  blurRadius: 8,
-                  offset: const Offset(0, -2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(Icons.home, 'Home', false),
-                _buildNavItem(Icons.receipt_long, 'Orders', true),
-                _buildNavItem(Icons.person, 'Profile', false),
-              ],
-            ),
-          ),
+          
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -113,26 +94,7 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, bool isSelected) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: isSelected ? Colors.blue : Colors.grey[600], size: 28),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.blue : Colors.grey[600],
-              fontSize: 12,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 }
 
 class OrderCard extends StatelessWidget {

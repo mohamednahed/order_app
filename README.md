@@ -1,4 +1,4 @@
-# ecommerce_app
+# order-manager
 
 A new Flutter project.
 

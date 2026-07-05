@@ -16,7 +16,7 @@ class AuthProvider extends ChangeNotifier {
 
     await Future.delayed(const Duration(seconds: 2));
 
-    _user = User(id: '1', name: 'Roaa', email: email);
+    _user = User(id: '1', name: 'Mohammed', email: email);
     _isLoggedIn = true;
     _isLoading = false;
     notifyListeners();
