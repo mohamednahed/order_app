@@ -35,6 +35,14 @@ class OrdersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateOrder(Order updatedOrder) {
+    final index = _orders.indexWhere((o) => o.id == updatedOrder.id);
+    if (index != -1) {
+      _orders[index] = updatedOrder;
+      notifyListeners();
+    }
+  }
+
   void updateOrderStatus(String orderId, String newStatus) {
     final index = _orders.indexWhere((o) => o.id == orderId);
     if (index != -1) {

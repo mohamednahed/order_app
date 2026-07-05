@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'add_order_screen.dart';
 import 'providers/orders_provider.dart';
 import 'models/order.dart';
 
@@ -84,8 +85,8 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Add New Order'), duration: Duration(seconds: 2)),
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const AddOrderScreen()),
           );
         },
         backgroundColor: Colors.blue,
@@ -181,8 +182,8 @@ class OrderCard extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Edit ${order.table}'), duration: const Duration(seconds: 1)),
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => AddOrderScreen(order: order)),
                   );
                 },
                 icon: const Icon(Icons.edit_outlined, color: Colors.grey),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'add_order_screen.dart';
 import 'orders-screen.dart';
 import 'profile_screen.dart';
 import 'providers/auth_provider.dart';
@@ -240,7 +241,11 @@ class HomeDashboard extends StatelessWidget {
               label: 'Add Order',
               color: Colors.blue.shade100,
               iconColor: Colors.blue.shade700,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const AddOrderScreen()),
+                );
+              },
             ),
             const SizedBox(width: 12),
             _buildQuickActionCard(
@@ -248,7 +253,11 @@ class HomeDashboard extends StatelessWidget {
               label: 'View Orders',
               color: Colors.green.shade100,
               iconColor: Colors.green.shade700,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const OrdersScreen()),
+                );
+              },
             ),
             const SizedBox(width: 12),
             _buildQuickActionCard(
@@ -256,7 +265,11 @@ class HomeDashboard extends StatelessWidget {
               label: 'Profile',
               color: Colors.purple.shade100,
               iconColor: Colors.purple.shade700,
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                );
+              },
             ),
           ],
         ),
