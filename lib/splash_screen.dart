@@ -1,6 +1,11 @@
 import 'dart:async';
-import 'package:order_app/onboarding_screen.dart.dart';
 import 'package:flutter/material.dart';
+import 'package:order_app/home_screen.dart';
+import 'package:order_app/login_screen.dart';
+import 'package:order_app/onboarding_screen.dart';
+import 'package:order_app/providers/auth_provider.dart';
+import 'package:order_app/services/local_storage.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,9 +18,29 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 5), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const OnboardingScreen()));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Timer(const Duration(seconds: 2), _navigateNext);
     });
+  }
+
+  void _navigateNext() {
+    final auth = context.read<AuthProvider>();
+    if (!LocalStorage.hasSeenOnboarding) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+      );
+      return;
+    }
+
+    if (auth.isLoggedIn) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    }
   }
 
   @override

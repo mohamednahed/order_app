@@ -3,6 +3,7 @@ import 'package:order_app/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/orders_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -83,20 +84,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final auth = context.read<AuthProvider>();
-      await auth.register(
-        _fullNameController.text.trim(),
-        _emailController.text.trim(),
-        _passwordController.text,
-      );
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
 
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
+    final auth = context.read<AuthProvider>();
+    final success = await auth.register(
+      _fullNameController.text.trim(),
+      _emailController.text.trim(),
+      _passwordController.text,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      final user = auth.user;
+      if (user != null) {
+        await context.read<OrdersProvider>().fetchOrders(user.id);
       }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(auth.errorMessage ?? 'Registration failed. Please try again.'),
+          backgroundColor: Colors.red.shade600,
+        ),
+      );
     }
   }
 
@@ -242,6 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: Colors.white,
                               strokeWidth: 2,
                             ),
+                            
                           )
                         : const Text(
                             'Register',

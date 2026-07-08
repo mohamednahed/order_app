@@ -25,22 +25,28 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
   }
 
   void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final auth = context.read<AuthProvider>();
-      await auth.forgotPassword(_emailController.text.trim());
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Reset link sent to ${_emailController.text}'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) Navigator.pop(context);
-        });
-      }
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final auth = context.read<AuthProvider>();
+    final success = await auth.forgotPassword(_emailController.text.trim());
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(success
+            ? 'A password reset link has been sent to ${_emailController.text.trim()}.'
+            : auth.errorMessage ?? 'Unable to send reset link.'),
+        backgroundColor: success ? Colors.green : Colors.red,
+      ),
+    );
+
+    if (success) {
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) Navigator.pop(context);
+      });
     }
   }
 
@@ -63,7 +69,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
-              
+
               // Icon
               Container(
                 padding: const EdgeInsets.all(16),
@@ -78,7 +84,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               const Text(
                 'Forgot Password?',
                 style: TextStyle(
@@ -87,7 +93,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                 ),
               ),
               const SizedBox(height: 10),
-              
+
               Text(
                 'Enter your email to receive a reset link',
                 style: TextStyle(
@@ -97,7 +103,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
-              
+
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -113,12 +119,14 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
               ),
               const SizedBox(height: 24),
-              
+
               SizedBox(
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: context.watch<AuthProvider>().isLoading ? null : _submitForm,
+                  onPressed: context.watch<AuthProvider>().isLoading
+                      ? null
+                      : _submitForm,
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -144,7 +152,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                 ),
               ),
               const SizedBox(height: 12),
-              
+
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Back to Login'),

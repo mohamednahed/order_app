@@ -130,14 +130,14 @@ class HomeDashboard extends StatelessWidget {
                     'Welcome back! You have ${context.watch<OrdersProvider>().activeOrderCount} active orders',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ],
               ),
               CircleAvatar(
                 radius: 28,
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
                 child: const Icon(
                   Icons.person,
                   color: Colors.white,
@@ -160,7 +160,7 @@ class HomeDashboard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 2,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -328,7 +328,7 @@ class HomeDashboard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        ...orders.map((order) => _buildOrderCard(order)).toList(),
+        ...orders.map((order) => _buildOrderCard(order)),
       ],
     );
   }
@@ -360,7 +360,7 @@ class HomeDashboard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.08),
+            color: Colors.grey.withValues(alpha: 0.08),
             spreadRadius: 1,
             blurRadius: 6,
             offset: const Offset(0, 1),
@@ -399,7 +399,7 @@ class HomeDashboard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.1),
+                        color: statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(

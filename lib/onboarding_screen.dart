@@ -1,5 +1,6 @@
-import 'package:order_app/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:order_app/login_screen.dart';
+import 'package:order_app/services/local_storage.dart';
 
 class OnboardingData {
   final String imagePath;
@@ -49,9 +50,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 16.0, right: 24.0),
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
-                  },
+                  onPressed: () async {
+                  await LocalStorage.setSeenOnboarding();
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+                },
                   child: const Text(
                     'Skip',
                     style: TextStyle(

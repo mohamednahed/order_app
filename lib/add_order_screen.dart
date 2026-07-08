@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/order.dart';
 import 'providers/orders_provider.dart';
+import 'services/local_storage.dart';
 
 class AddOrderScreen extends StatefulWidget {
   final Order? order;
@@ -136,7 +137,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     }
   }
 
-  void _submitOrder() {
+  Future<void> _submitOrder() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -149,13 +150,28 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
       price: price,
       date: _formatDate(_selectedDate),
       status: _selectedStatus,
+      createdAt: widget.order?.createdAt ?? DateTime.now(),
     );
 
+    final ordersProvider = context.read<OrdersProvider>();
+    final user = LocalStorage.getUser();
+
     if (_isEditing) {
-      context.read<OrdersProvider>().updateOrder(order);
+      await ordersProvider.updateOrder(order);
     } else {
-      context.read<OrdersProvider>().addOrder(order);
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please login first.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      await ordersProvider.addOrder(order, user.id);
     }
+
+    if (!mounted) return;
 
     Navigator.of(context).pop();
 
@@ -245,7 +261,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedStatus,
+                initialValue: _selectedStatus,
                 decoration: const InputDecoration(
                   labelText: 'Status',
                   border: OutlineInputBorder(),

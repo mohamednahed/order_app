@@ -4,6 +4,7 @@ import 'package:order_app/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/orders_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,18 +23,32 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
 
   Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
 
-      final auth = context.read<AuthProvider>();
-      await auth.login(_email, _password);
+    _formKey.currentState!.save();
+    final auth = context.read<AuthProvider>();
+    final success = await auth.login(_email, _password, _rememberMe);
 
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
+    if (!mounted) return;
+
+    if (success) {
+      final user = auth.user;
+      if (user != null) {
+        await context.read<OrdersProvider>().fetchOrders(user.id);
       }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(auth.errorMessage ?? 'Login failed. Please try again.'),
+          backgroundColor: Colors.red.shade600,
+        ),
+      );
     }
   }
 
@@ -57,12 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
-            key: _formKey, 
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-
                 const Text(
                   'Welcome Back! 👋',
                   style: TextStyle(
@@ -77,7 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
                 ),
                 const SizedBox(height: 40),
-
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
@@ -123,7 +136,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 const SizedBox(height: 40),
-
                 TextFormField(
                   obscureText: _obscurePassword,
                   textInputAction: TextInputAction.done,
@@ -180,7 +192,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -228,19 +239,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 const SizedBox(height: 32),
-
                 SizedBox(
                   width: double.infinity,
                   height: 54,
                   child: ElevatedButton(
-                    onPressed:(){
-                       _submitForm();
-                       Navigator.pushReplacement(
-                         context,
-                         MaterialPageRoute(builder: (_) => const HomeScreen()),
-                       );
-                    }
-                       , 
+                    onPressed: context.watch<AuthProvider>().isLoading
+                        ? null
+                        : _submitForm,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF008A33),
                       shape: RoundedRectangleBorder(
@@ -259,7 +264,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

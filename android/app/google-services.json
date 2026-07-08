@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "267654077372",
+    "project_id": "order-app-66e8f",
+    "storage_bucket": "order-app-66e8f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267654077372:android:1688a0c87abdaf1dcce9b9",
+        "android_client_info": {
+          "package_name": "com.blackstate.orderapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcsQhnUymTRsoD-fozUHkcX9MwZVRx9VI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267654077372:android:7bbaacf43c2f6061cce9b9",
+        "android_client_info": {
+          "package_name": "com.ecommerce.ecommerce_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcsQhnUymTRsoD-fozUHkcX9MwZVRx9VI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

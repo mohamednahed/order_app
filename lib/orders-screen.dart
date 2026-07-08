@@ -34,8 +34,8 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    final orders = context.watch<OrdersProvider>();
-    final filtered = orders.filteredOrders;
+    final ordersProvider = context.watch<OrdersProvider>();
+    final filtered = ordersProvider.filteredOrders;
 
     return Scaffold(
       appBar: AppBar(
@@ -69,18 +69,29 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
       ),
       body: Column(
         children: [
+          if (ordersProvider.isLoading)
+            const LinearProgressIndicator(minHeight: 4),
           Expanded(
-            child: filtered.isEmpty
-                ? const Center(
-                    child: Text('No orders in this category', style: TextStyle(color: Colors.grey, fontSize: 16)),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: filtered.length?? 0,
-                    itemBuilder: (context, index) => OrderCard(order: filtered[index]),
-                  ),
+            child: ordersProvider.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : filtered.isEmpty
+                    ? const Center(
+                        child: Text('No orders in this category', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: filtered.length,
+                        itemBuilder: (context, index) => OrderCard(order: filtered[index]),
+                      ),
           ),
-          
+          if (ordersProvider.errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                ordersProvider.errorMessage!,
+                style: const TextStyle(color: Colors.red, fontSize: 14),
+              ),
+            ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -128,7 +139,7 @@ class OrderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -144,7 +155,7 @@ class OrderCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: _getStatusColor(order.status).withOpacity(0.1),
+                  color: _getStatusColor(order.status).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
