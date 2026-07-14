@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 # order-manager
-=======
 # Order-app
->>>>>>> 11b06f005253944fcac1def41bcc15ba05066969
 
 A new Flutter project.
 
